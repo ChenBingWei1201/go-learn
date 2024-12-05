@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Chat</title>
+</head>
+<body>
+    <h1>WebSocket Chat</h1>
+    <input id="username" placeholder="Enter your username" />
+    <input id="message" placeholder="Enter your message" />
+    <button onclick="sendMessage()">Send</button>
+    <div id="chat"></div>
+
+    <script>
+        const ws = new WebSocket("ws://localhost:8080/ws");
+
+        ws.onmessage = function(event) {
+            const msg = JSON.parse(event.data);
+            const chat = document.getElementById('chat');
+            chat.innerHTML += `<p><strong>${msg.username}:</strong> ${msg.content}</p>`;
+        };
+
+        function sendMessage() {
+            const username = document.getElementById('username').value;
+            const message = document.getElementById('message').value;
+            ws.send(JSON.stringify({ username, content: message }));
+        }
+    </script>
+</body>
+</html>
